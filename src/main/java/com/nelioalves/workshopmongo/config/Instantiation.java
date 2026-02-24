@@ -13,15 +13,22 @@ import com.nelioalves.workshopmongo.domain.User;
 import com.nelioalves.workshopmongo.dto.AuthorDTO;
 import com.nelioalves.workshopmongo.repository.PostRepository;
 import com.nelioalves.workshopmongo.repository.UserRepository;
+import com.nelioalves.workshopmongo.resources.UserResource;
 
 @Configuration
 public class Instantiation implements CommandLineRunner {
+
+    private final UserResource userResource;
 
 	@Autowired
 	private UserRepository userRopository;
 	
 	@Autowired
 	private PostRepository postRepository;
+
+    Instantiation(UserResource userResource) {
+        this.userResource = userResource;
+    }
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -43,6 +50,9 @@ public class Instantiation implements CommandLineRunner {
 		Post post2 = new Post(null, sdf.parse("23/03/2018"), "Bom dia", "Acordei feliz hoje!", new AuthorDTO(maria));
 		
 		postRepository.saveAll(Arrays.asList(post1, post2));
+	
+		maria.getPosts().addAll(Arrays.asList(post1, post2));
+		userRopository.save(maria);
 	}
 
 }
